@@ -34,11 +34,11 @@ public class ReservaMVCController {
     @GetMapping
     public String getFormularioAltaReserva(Model model) {
     	    	
-    /*	UsuarioDto user = (UsuarioDto) session.getAttribute("usuario");
+    	UsuarioDto user = (UsuarioDto) session.getAttribute("usuario");
 
     	if(user==null) {    		
     		 return "redirect:/login";
-    	}   */
+    	}   
     	
     	model.addAttribute("reserva",new ReservaDto());
     	
@@ -64,11 +64,11 @@ public class ReservaMVCController {
     @GetMapping("/all")
     public String mostrarListaReservas(Model model) {
     	
-    /*	UsuarioDto user = (UsuarioDto) session.getAttribute("usuario");
+    	UsuarioDto user = (UsuarioDto) session.getAttribute("usuario");
 
     	if(user==null) {    		
     		 return "redirect:/login"; 
-    	} */
+    	} 
     	
       
         List<ReservaDto> listaReservas = reservaService.getAllReservas();
