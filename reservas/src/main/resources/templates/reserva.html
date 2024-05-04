@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>Reservar</title>
+	
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<!-- Flatpickr CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<!-- Flatpickr JS -->
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	
+	
+	<script>
+		$(document).ready(function() {
+			// Inicializar Flatpickr
+			$('.flatpickr').flatpickr({
+				enableTime : true, // Habilitar la selección de tiempo
+				noCalendar : true, // Desactivar el calendario
+				dateFormat : "H:i", // Formato de la hora
+				time_24hr : true, // Usar formato de 24 horas
+				minuteIncrement : 30
+			// Intervalo de minutos
+			});
+		});
+	</script>
+
+
+</head>
+
+<body>
+
+	<div class="content">
+		<!-- Menú lateral -->
+		<div class="top-menu">
+			<a href="/reserva" class="menu-item btn-success" style="border-bottom: 2px solid white; background-color: #333333;">RESERVA TU ENTRENADOR PERSONAL</a>
+			<a href="/reserva/all" class="menu-item btn-success" style="background-color: #333333;">CONSULTAR HORARIOS DE RESERVAS</a>
+		</div>
+
+		<!-- Contenido principal -->
+
+		<section class="ftco-section">
+
+			<div class="row justify-content-center">
+				<div class="col-auto">
+					<div class="wrapper">
+						<div class="row no-gutters">
+							<div class="col-lg-6">
+								<div class="contact-wrap w-100 p-md-3 p-3">
+									<h5 align="center">¡Tu entrenador personal a tu alcance! </h5>
+									<h5 align="center">¡Reserva tu cita en segundos!</h5>
+									<div id="form-message-warning" class="mb-4"></div>
+									<div id="form-message-success" class="mb-4">Your message
+										was sent, thank you!</div>
+
+									<form action="/reserva" method="post" th:object="${reserva}" class="form-controller">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<!-- Campo de texto -->
+													<label for="nombre">Nombre y apellidos:</label> 
+													<input type="text" id="nombre" name="nombre" th:field="*{nombre}" class="form-control" required>
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="form-group">
+													<label for="dia">Fecha de Reserva:</label> <input
+														type="date" id="dia" name="dia" th:field="*{dia}"
+														th:format="'yyyy-MM-dd'" class="form-control" required>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="horaInicio">Hora de Inicio:</label> <input
+														type="text" id="horaInicio" name="horaInicio" th:field="*{horaInicio}" class="form-control flatpickr" required>
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="horaFin">Hora de Fin:</label>
+													 <input	type="text" id="horaFin" name="horaFin" th:field="*{horaFin}" class="form-control flatpickr" required>
+												</div>
+											</div>
+
+
+											<div class="col-md-12 p-md-3">
+												<div class="form-group" align="center">
+													<button type="submit" class="btn btn-success" style="border-bottom: 2px solid #333333; background-color: #333333;">RESERVAR</button>
+													<div class="submitting"></div>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="col-lg-6 d-flex align-items-stretch">
+								<div class="info-wrap w-100 p-5 img"
+									style="background-image: url(/images/personaltrainer.jpg);"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+</body>
+
+</html>

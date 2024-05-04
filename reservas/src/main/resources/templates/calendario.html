@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Calendario</title>
+
+<link rel="stylesheet" href="/css/style.css">
+<link href='/css/fullcalendar.css' rel='stylesheet' />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+</head>
+
+<script th:inline="javascript">
+	function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	/*<![CDATA[*/
+	$(document)
+			.ready(
+					function() {
+						moment.locale('es'); // Establecer el idioma de moment.js a español     
+						$('#calendario')
+								.fullCalendar(
+										{
+											header : {
+												left : '',
+												right : 'prev,next today',
+												center : 'title'
+											},
+											defaultView : 'agendaWeek',
+											minTime : '09:00:00',
+											maxTime : '23:00:00',
+											slotDuration : '01:30:00',
+											allDaySlot : false,
+											timeFormat : 'HH:mm',
+											businessHours : [ {
+												// Horas laborables de 08:00 a 14:00 de lunes a viernes
+												dow : [ 0, 1, 2, 3, 4, 5, 6 ], // días laborables de lunes a viernes
+												start : '09:00', // hora de inicio
+												end : '17:00' // hora de fin
+											}, {
+												// Horas laborables de 17:00 a 23:00 de lunes a viernes
+												dow : [ 0, 1, 2, 3, 4, 5, 6 ], // días laborables de lunes a viernes
+												start : '17:00', // hora de inicio
+												end : '23:00' // hora de fin
+											} ],
+											locale : 'es',
+											dayNamesShort : [ 'Domingo',
+													'Lunes', 'Martes',
+													'Miércoles', 'Jueves',
+													'Viernes', 'Sábado' ],
+											views : {
+												agenda : {
+													slotLabelFormat : 'HH:mm', // Formato para mostrar el intervalo en la columna de horarios
+													slotDuration : '00:30:00',
+													columnHeaderText : function(
+															date) {
+														return capitalizeFirstLetter(date
+																.format('dddd D'));
+													},
+												}
+											},
+											events : [
+													/* Iterar sobre las reservas y agregarlas al calendario */
+													/*[# th:each="reserva : ${listaReservas}"]*/
+													{
+														title : '[(${reserva.nombre})]',
+														start : '[(${reserva.fechaHoraInicio})]',
+														end : '[(${reserva.fechaHoraFin})]',
+														id : '[(${reserva.id})]'
+													},
+											/*[/]*/
+											],
+											eventRender: function (event, element) {
+											  
+												var deleteButton = $("<span class='delete-button btn-danger btn-sm'>Anular</span>");
+											  
+												deleteButton.click(function (e) {
+												    e.stopPropagation();
+												    var confirmar = confirm("¿Estás seguro de que deseas eliminar esta reserva?");
+												    if (confirmar) {
+												        // Obtiene el ID del evento
+												        var eventId = event.id;
+
+												        // Realiza la solicitud DELETE
+												        $.ajax({
+												            url: 'http://localhost:8080/reservas/' + eventId,
+												            type: 'DELETE',
+												            success: function (response) {
+												                // Maneja la respuesta después de eliminar la reserva
+												                $('#calendario').fullCalendar('removeEvents', eventId);
+												            },
+												            error: function (error) {
+												                // Maneja errores
+												                console.error('Error al eliminar la reserva:', error);
+												            }
+												        });
+												    }
+												});
+
+
+											    element.find('.fc-bg').append(deleteButton);												 
+								            },
+										});
+					});
+	
+	
+	/*]]>*/
+</script>
+
+
+<body>
+	<div class="content">
+
+		<!-- Menú lateral -->
+		<div class="top-menu">
+			<a href="/reserva" class="menu-item btn-success" style="border-bottom: 2px solid white; background-color: #333333;">RESERVA TU ENTRENADOR PERSONAL</a>
+			<a href="/reserva/all" class="menu-item btn-success" style="background-color: #333333;">CONSULTAR HORARIOS DE RESERVAS</a>
+		</div>
+
+		<!-- Contenido principal -->
+		<section class="ftco-section">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="row no-gutters">
+						<div id="calendario"></div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</div>
+</body>
+
+</html>
